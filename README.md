@@ -7,8 +7,3 @@
 * AMI ID			: ami-02eac2c0129f6376b
 * Python Version	: 3.7
 
------------- | -------------
-Platform | Content from cell 2
-Operating System | Content in the second column
-AMI ID | ami-02eac2c0129f6376b
-Python Version | 3.7
