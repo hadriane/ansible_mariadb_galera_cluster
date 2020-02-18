@@ -1,0 +1,71 @@
+---
+
+- name: Set SELinux to permissive
+  selinux:
+    policy: targeted
+    state: permissive
+
+- name: Remove mysql folder if exist
+  file:
+    path: /var/lib/mysql
+    state: absent
+  ignore_errors: True
+
+- name: Remove my.cnf if exist
+  file:
+    path: /etc/my.cnf
+    state: absent
+  ignore_errors: True
+
+- name: Copy MariaDB Yum repo configuration files
+  copy:
+    src: ./templates/cluster.repo
+    dest: /etc/yum.repos.d/cluster.repo
+
+- name: Configure Yum
+  command: "yum makecache --disablerepo='*' --enablerepo='{{repo_1}}'"
+  args:
+    warn: false
+    
+- name: Check if EPEL has been installed
+  stat: path={{ epel_file_path }}
+  register: epel_result
+ 
+- name: 2.Install EPEL repo.
+  yum:
+    name: "{{ epel_url }}"
+    state: present
+  when: not epel_result.stat.exists
+ 
+- name: 3.Import EPEL GPG key.
+  rpm_key:
+    key: "{{ epel_gpg_key_url }}"
+    state: present
+  when: not epel_result.stat.exists
+
+- name: Remove MariaDB server and packages of exist
+  yum:
+    name:
+      - "{{package_1}}"
+      - "{{package_2}}"
+      - "{{package_3}}"
+      - "{{package_4}}"
+    state: absent
+
+- name: Install MariaDB server and packages
+  yum:
+    name:
+      - "{{package_1}}"
+      - "{{package_2}}"
+      - "{{package_3}}"
+      - "{{package_4}}"
+    state: latest
+      
+- name: Start and enable MariaDB server 
+  service:
+    name: "{{service_1}}"
+    enabled: true
+    state: started
+
+
+

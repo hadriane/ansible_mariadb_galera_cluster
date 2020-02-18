@@ -1,0 +1,12 @@
+# tasks file for mariadb
+
+- name: Storing all host IP's in ./files/ips
+  command: "python ./tasks/scripts/python_store_ips.py {{ playbook_dir }} {{ inventory_hostname }}"
+  delegate_to: 127.0.0.1
+  
+- name: Create server.cnf file for each host
+
+  command: "./tasks/scripts/ammend_config_file.sh {{ playbook_dir }} {{ mariadb_user_2 }} {{ mariadb_root_passwd }}"
+  delegate_to: 127.0.0.1
+  run_once: true
+  become_user: ansible

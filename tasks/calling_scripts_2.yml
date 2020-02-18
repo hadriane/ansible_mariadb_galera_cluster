@@ -1,0 +1,30 @@
+# tasks file for mariadb
+
+- name: Storing all host IP's in ./files/ips
+  #local_action:
+  #hosts: localhost
+  command: "python ./tasks/scripts/python_store_ips.py {{ playbook_dir }} {{ inventory_hostname }}"
+  #args:
+  #  chdir:  "{{role_path}}/files/"
+  delegate_to: 127.0.0.1
+  #become_user: ansible
+  
+- name: Create and modify server.cnf file for each host
+  #local_action:
+  #hosts: localhost
+  command: "./tasks/scripts/ammend_config_file_1.sh {{ playbook_dir }} {{ mariadb_user_1 }} {{ mariadb_user1_passwd }} {{ inventory_hostname }}"
+  #args:
+  #  chdir:  "{{role_path}}/files/"
+  delegate_to: 127.0.0.1
+  run_once: true
+  become_user: ansible
+  
+  
+- name: Last modification of server.cnf file for each host
+  #local_action:
+  #hosts: localhost
+  command: "./tasks/scripts/ammend_config_file_2.sh {{ playbook_dir }} {{ inventory_hostname }}"
+  #args:
+  #  chdir:  "{{role_path}}/files/"
+  delegate_to: 127.0.0.1
+  become_user: ansible

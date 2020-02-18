@@ -1,0 +1,51 @@
+---
+# tasks file for mariadb
+
+- hosts: dbservers
+  gather_facts: true
+  become: true
+
+  tasks:
+  
+  - name: set the number of hosts to a variable
+    set_fact:
+      number_of_hosts: "{{ groups['dbservers'] | length - 1}}"
+      
+  - name: set the number of hosts to a variable
+    set_fact:
+      all_db_hosts: "{{ groups['dbservers'] }}"
+
+#  - debug:
+#      msg: "{{ hostvars[groups.dbservers.1].ansible_default_ipv4.address }}"
+
+
+  - debug:
+      msg: "{{ all_db_hosts }}"
+      
+      
+  - name: the final countdown
+    debug:
+      msg: "{{ item }}"
+    with_list: "{{ groups['dbservers'] }}"
+    when: item == ansible_eth0.ipv4.address
+    
+    
+  - name: Execute Script
+    command: "python ./files/python.py"
+    delegate_to: 127.0.0.1
+
+      
+#  - name: execute install script
+#    #local_action:
+#    #hosts: localhost
+#    #script: /etc/ansible/mariadb/files/python.py
+#    command: 'ls /etc'
+#    delegate_to: controller
+#    
+#  - name: execute install script
+#    #local_action:
+#    #hosts: localhost
+#    command: "python /etc/ansible/mariadb/files/python.py {{ groups['dbservers'] }}"
+#    #args:
+#    #  chdir:  "{{role_path}}/files/"
+#    delegate_to: 127.0.0.1

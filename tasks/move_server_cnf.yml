@@ -1,0 +1,18 @@
+- name: Get files in ./templates/tmp directory
+  find:
+    path: ./templates/tmp
+    file_type: "file"
+  delegate_to: 127.0.0.1
+  register: find_result
+  run_once: true
+
+- name: Move server.cnf file to its respective hosts
+  copy:
+    src: "{{ item.path }}"
+    dest: /etc/my.cnf.d/server.cnf
+    owner: root
+    group: root
+    mode: '0644'
+    backup: yes
+  with_items: "{{ find_result.files }}"
+  when: item.path | basename == ansible_eth0.ipv4.address

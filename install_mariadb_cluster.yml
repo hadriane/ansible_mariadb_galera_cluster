@@ -1,0 +1,38 @@
+---
+
+- hosts: dbservers
+  gather_facts: true
+  become: true
+
+  vars_files:
+    - ./vars/variables.yml
+      
+  tasks:
+   - include: ./tasks/install_mariadb_server.yml
+   - include: ./tasks/configure_mariadb_server.yml
+   - include: ./tasks/calling_scripts_1.yml
+   - include: ./tasks/calling_scripts_2.yml
+   - include: ./tasks/move_server_cnf.yml
+
+
+
+- hosts: dbserverleader
+  gather_facts: false
+  become: true
+
+  tasks:    
+    - include: ./tasks/start_mariadb_leader.yml
+
+    - pause: seconds=8
+
+- hosts: dbserverfollowers
+  gather_facts: false
+  become: true
+
+  vars_files:
+    - ./vars/variables.yml
+  tasks:       
+    - include: ./tasks/start_mariadb_followers.yml
+
+    
+ 

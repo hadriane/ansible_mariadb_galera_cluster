@@ -1,0 +1,5 @@
+- name: Start and enable MariaDB server on Followers
+  service:
+    name: "{{service_1}}"
+    state: started
+

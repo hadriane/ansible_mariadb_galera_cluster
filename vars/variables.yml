@@ -1,0 +1,14 @@
+#directory: /etc
+repo_1: mariadb
+epel_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+epel_gpg_key_url: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
+epel_file_path: "/etc/yum.repos.d/epel.repo"
+package_1: MariaDB-server
+package_2: MariaDB-client
+package_3: mariadb-libs
+package_4: MySQL-python
+service_1: mariadb
+mariadb_user_1: sst_user
+mariadb_user1_passwd: Password01
+mariadb_root_passwd: Password01
+mariadb_socket: /var/lib/mysql/mysql.sock

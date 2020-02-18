@@ -1,0 +1,38 @@
+# Tasks file to configure MariaDB server on all hosts
+
+- name: Create database user for localhost connection
+  mysql_user:
+    user: "{{mariadb_user_1}}"
+    password: "{{ mariadb_root_passwd }}"
+    priv: '*.*:ALL'
+    host: localhost
+    state: present
+
+- name: Create database root user for all other hosts connection
+  mysql_user:
+    user: "{{mariadb_user_1}}"
+    password: "{{ mariadb_user1_passwd }}"
+    priv: '*.*:ALL'
+    host: "{{ item }}"
+    state: present
+  with_list: "{{ groups['dbservers'] }}"
+  when: item != ansible_eth0.ipv4.address
+
+- name: Deletes anonymous database users
+  mysql_user:
+   name: ''
+   host_all: yes
+   state: absent
+   
+- name: Removes MariaDB test database
+  mysql_db:
+    db: test
+    state: absent
+   
+- name: Set MariaDB root password 
+  mysql_user: user=root password="{{ mariadb_root_passwd }}"
+
+- name: Stop MariaDB server 
+  service:
+    name: "{{service_1}}"
+    state: stopped

@@ -1,0 +1,6 @@
+# tasks file for mariadb
+
+- name: Housekeeping
+  command: "python ./tasks/scripts/housekeeping.py {{ playbook_dir }}"
+  delegate_to: 127.0.0.1
+  run_once: true
