@@ -1,4 +1,0 @@
-- name: Get hostnames for hosts
-  command: "./tasks/bash_store_hostnames.sh {{ playbook_dir }}"
-  run_once: true
-  become_user: ansible
